@@ -679,6 +679,15 @@ require("lazy").setup({
       -- "ibhagwan/fzf-lua", -- optional
     },
     config = { kind = "vsplit" },
+    keys = {
+      {
+        "<leader>g",
+        function()
+          require("neogit").open()
+        end,
+        desc = "Open Neogit",
+      },
+    },
   },
 
   -- require 'kickstart.plugins.debug',
