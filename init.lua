@@ -1,22 +1,21 @@
 -- Vim Options --
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+vim.opt.breakindent = true
+vim.opt.clipboard = "unnamedplus"
+vim.opt.foldenable = false
+vim.opt.foldmethod = "indent"
+vim.opt.hlsearch = true
+vim.opt.ignorecase = true
+vim.opt.inccommand = "split"
+vim.opt.mouse = "a"
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.mouse = "a"
-vim.opt.clipboard = "unnamedplus"
-vim.opt.breakindent = true
-vim.opt.undofile = true
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.updatetime = 250
-vim.opt.timeoutlen = 300
-vim.opt.inccommand = "split"
 vim.opt.scrolloff = 15
-vim.opt.hlsearch = true
 vim.opt.signcolumn = "yes"
-vim.opt.foldmethod = "indent"
-vim.opt.foldenable = false
+vim.opt.smartcase = true
+vim.opt.undofile = true
+vim.opt.updatetime = 250
 
 -- lazy.nvim init --
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -27,10 +26,12 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Keymaps (non-plugin) --
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove search highlighting" })
+vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and Clear hlsearch" })
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Quick leave insert mode" })
-vim.keymap.set("n", "<c-s>", ":w<cr>", { desc = "Save buffer" })
+vim.keymap.set({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save File" })
+
 vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
@@ -41,6 +42,9 @@ vim.keymap.set("n", "<m-l>", "<c-w>L", { desc = "Move window to right" })
 vim.keymap.set("n", "<m-k>", "<c-w>K", { desc = "Move window to top" })
 vim.keymap.set("n", "<m-m>", "<c-w>o", { desc = "Close other windows" })
 
+vim.keymap.set("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move Down" })
+vim.keymap.set("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move Up" })
+
 -- Autocommands --
 -- Highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -50,16 +54,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     vim.highlight.on_yank()
   end,
 })
--- Restore session
-vim.api.nvim_create_autocmd("VimEnter", {
-  group = vim.api.nvim_create_augroup("restore_session", { clear = true }),
-  callback = function()
-    if vim.fn.getcwd() ~= vim.env.HOME then
-      require("persistence").load()
-    end
-  end,
-  nested = true,
-})
 
 require("lazy").setup({
   "tpope/vim-sleuth",
@@ -67,9 +61,11 @@ require("lazy").setup({
   "ThePrimeagen/vim-be-good",
 
   {
-    "folke/persistence.nvim",
-    event = "BufReadPre",
-    opts = {},
+    "olimorris/persisted.nvim",
+    lazy = false,
+    opts = {
+      autoload = true,
+    },
   },
 
   {
@@ -160,7 +156,10 @@ require("lazy").setup({
 
   {
     "folke/which-key.nvim",
-    event = "VimEnter",
+    event = "VeryLazy",
+    init = function()
+      vim.o.timeoutlen = 300
+    end,
     config = function()
       require("which-key").setup()
       require("which-key").register({
@@ -196,34 +195,30 @@ require("lazy").setup({
   {
     "echasnovski/mini.nvim",
     config = function()
-      -- Better Around/Inside textobjects
-      --  - va)  - [V]isually select [A]round [)]paren
-      --  - yinq - [Y]ank [I]nside [N]ext [']quote
-      --  - ci'  - [C]hange [I]nside [']quote
       require("mini.ai").setup({ n_lines = 500 })
-      -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
       require("mini.surround").setup()
-      require("mini.files").setup({ windows = { preview = true, width_preview = 80 } })
+      require("mini.files").setup({
+        options = { use_as_default_explorer = true },
+        windows = { preview = true, width_preview = 80 },
+      })
     end,
     keys = {
       {
-        "<space>a",
+        "<leader>a",
         function()
           require("mini.files").open(vim.api.nvim_buf_get_name(0), true)
         end,
         desc = "Toggle File Explorer (Cwd)",
       },
     },
+    dependencies = "nvim-tree/nvim-web-devicons",
   },
 
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     opts = {
-      ensure_installed = { "angular", "bash", "c", "diff", "html", "lua", "luadoc", "markdown", "vim", "vimdoc" },
+      ensure_installed = { "angular", "bash", "diff", "html", "lua", "luadoc", "markdown", "vim", "vimdoc", "scss" },
       auto_install = true,
       highlight = {
         enable = true,
@@ -234,9 +229,6 @@ require("lazy").setup({
     config = function(_, opts)
       require("nvim-treesitter.install").prefer_git = true
       require("nvim-treesitter.configs").setup(opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, { "angular", "scss" })
-      end
       vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
         pattern = { "*.component.html", "*.container.html" },
         callback = function()
