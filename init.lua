@@ -1,11 +1,9 @@
 -- Vim Options --
 vim.g.mapleader = " "
-vim.g.maplocalleader = " "
 vim.opt.breakindent = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.foldenable = false
 vim.opt.foldmethod = "indent"
-vim.opt.hlsearch = true
 vim.opt.ignorecase = true
 vim.opt.inccommand = "split"
 vim.opt.mouse = "a"
