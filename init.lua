@@ -25,23 +25,23 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Keymaps (non-plugin) --
 vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and Clear hlsearch" })
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("t", "<Esc><Esc>", "<c-\\><c-n>", { desc = "Exit terminal mode" })
 
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Quick leave insert mode" })
-vim.keymap.set({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save File" })
+vim.keymap.set({ "i", "x", "n", "s" }, "<c-s>", "<cmd>w<cr><esc>", { desc = "Save File" })
 
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
-vim.keymap.set("n", "<m-j>", "<c-w>J", { desc = "Move window to bottom" })
-vim.keymap.set("n", "<m-h>", "<c-w>H", { desc = "Move window to left" })
-vim.keymap.set("n", "<m-l>", "<c-w>L", { desc = "Move window to right" })
-vim.keymap.set("n", "<m-k>", "<c-w>K", { desc = "Move window to top" })
-vim.keymap.set("n", "<m-m>", "<c-w>o", { desc = "Close other windows" })
+vim.keymap.set("n", "<c-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<c-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+vim.keymap.set("n", "<c-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+vim.keymap.set("n", "<c-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+vim.keymap.set("n", "<a-j>", "<c-w>J", { desc = "Move window to bottom" })
+vim.keymap.set("n", "<a-h>", "<c-w>H", { desc = "Move window to left" })
+vim.keymap.set("n", "<a-l>", "<c-w>L", { desc = "Move window to right" })
+vim.keymap.set("n", "<a-k>", "<c-w>K", { desc = "Move window to top" })
+vim.keymap.set("n", "<a-m>", "<c-w>o", { desc = "Close other windows" })
 
-vim.keymap.set("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move Down" })
-vim.keymap.set("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move Up" })
+vim.keymap.set("v", "<a-j>", ":m '>+1<cr>gv=gv", { desc = "Move Down" })
+vim.keymap.set("v", "<a-k>", ":m '<-2<cr>gv=gv", { desc = "Move Up" })
 
 -- Autocommands --
 -- Highlight on yank
@@ -92,7 +92,7 @@ require("lazy").setup({
   {
     "mbbill/undotree",
     config = function()
-      vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "Toggle Undotree" })
+      vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "Undotree" })
     end,
   },
 
@@ -115,16 +115,16 @@ require("lazy").setup({
         map("n", "[h", function() gs.nav_hunk("prev") end, "Prev Hunk")
         map("n", "]H", function() gs.nav_hunk("last") end, "Last Hunk")
         map("n", "[H", function() gs.nav_hunk("first") end, "First Hunk")
-        map({ "n", "v" }, "<leader>hs", ":Gitsigns stage_hunk<CR>", "Stage Hunk")
-        map({ "n", "v" }, "<leader>hr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
-        map("n", "<leader>hS", gs.stage_buffer, "Stage Buffer")
-        map("n", "<leader>hu", gs.undo_stage_hunk, "Undo Stage Hunk")
-        map("n", "<leader>hR", gs.reset_buffer, "Reset Buffer")
-        map("n", "<leader>hp", gs.preview_hunk_inline, "Preview Hunk Inline")
-        map("n", "<leader>hb", function() gs.blame_line({ full = true }) end, "Blame Line")
-        map("n", "<leader>hd", gs.diffthis, "Diff This")
-        map("n", "<leader>hD", function() gs.diffthis("~") end, "Diff This ~")
-        map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
+        map({ "n", "v" }, "<leader>gs", ":Gitsigns stage_hunk<cr>", "Stage Hunk")
+        map({ "n", "v" }, "<leader>gr", ":Gitsigns reset_hunk<cr>", "Reset Hunk")
+        map("n", "<leader>gS", gs.stage_buffer, "Stage Buffer")
+        map("n", "<leader>gu", gs.undo_stage_hunk, "Undo Stage Hunk")
+        map("n", "<leader>gR", gs.reset_buffer, "Reset Buffer")
+        map("n", "<leader>gp", gs.preview_hunk_inline, "Preview Hunk Inline")
+        map("n", "<leader>gb", function() gs.blame_line({ full = true }) end, "Blame Line")
+        map("n", "<leader>gd", gs.diffthis, "Diff This")
+        map("n", "<leader>gD", function() gs.diffthis("~") end, "Diff This ~")
+        map({ "o", "x" }, "ih", ":<c-U>Gitsigns select_hunk<cr>", "GitSigns Select Hunk")
       end,
     },
   },
@@ -134,15 +134,13 @@ require("lazy").setup({
     version = "*",
     event = "VeryLazy",
     keys = {
-      { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle Pin" },
-      { "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete Non-Pinned Buffers" },
-      { "<leader>bo", "<Cmd>BufferLineCloseOthers<CR>", desc = "Delete Other Buffers" },
-      { "<leader>br", "<Cmd>BufferLineCloseRight<CR>", desc = "Delete Buffers to the Right" },
-      { "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", desc = "Delete Buffers to the Left" },
-      { "<S-h>", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev Buffer" },
-      { "<S-l>", "<cmd>BufferLineCycleNext<cr>", desc = "Next Buffer" },
-      { "[b", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev Buffer" },
-      { "]b", "<cmd>BufferLineCycleNext<cr>", desc = "Next Buffer" },
+      { "<leader>bp", "<Cmd>BufferLineTogglePin<cr>", desc = "Toggle Pin" },
+      { "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<cr>", desc = "Delete Non-Pinned Buffers" },
+      { "<leader>bo", "<Cmd>BufferLineCloseOthers<cr>", desc = "Delete Other Buffers" },
+      { "<leader>br", "<Cmd>BufferLineCloseRight<cr>", desc = "Delete Buffers to the Right" },
+      { "<leader>bl", "<Cmd>BufferLineCloseLeft<cr>", desc = "Delete Buffers to the Left" },
+      { "<s-h>", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev Buffer" },
+      { "<s-l>", "<cmd>BufferLineCycleNext<cr>", desc = "Next Buffer" },
       { "[B", "<cmd>BufferLineMovePrev<cr>", desc = "Move buffer prev" },
       { "]B", "<cmd>BufferLineMoveNext<cr>", desc = "Move buffer next" },
     },
@@ -161,16 +159,12 @@ require("lazy").setup({
     config = function()
       require("which-key").setup()
       require("which-key").register({
-        ["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
-        ["<leader>d"] = { name = "[D]ocument", _ = "which_key_ignore" },
-        ["<leader>r"] = { name = "[R]ename", _ = "which_key_ignore" },
-        ["<leader>s"] = { name = "[S]earch", _ = "which_key_ignore" },
-        ["<leader>w"] = { name = "[W]orkspace", _ = "which_key_ignore" },
-        ["<leader>t"] = { name = "[T]oggle", _ = "which_key_ignore" },
-        ["<leader>h"] = { name = "Git [H]unk", _ = "which_key_ignore" },
+        ["<leader>s"] = { name = "[s]earch", _ = "which_key_ignore" },
+        ["<leader>t"] = { name = "[t]oggle", _ = "which_key_ignore" },
+        ["<leader>g"] = { name = "[g]it", _ = "which_key_ignore" },
       })
       require("which-key").register({
-        ["<leader>h"] = { "Git [H]unk" },
+        ["<leader>h"] = { "Git [h]unk" },
       }, { mode = "v" })
     end,
   },
@@ -202,11 +196,11 @@ require("lazy").setup({
     end,
     keys = {
       {
-        "<leader>a",
+        "<leader>e",
         function()
           require("mini.files").open(vim.api.nvim_buf_get_name(0), true)
         end,
-        desc = "Toggle File Explorer (Cwd)",
+        desc = "Toggle File [e]xplorer (Cwd)",
       },
     },
     dependencies = "nvim-tree/nvim-web-devicons",
@@ -261,7 +255,7 @@ require("lazy").setup({
     config = true,
     keys = {
       {
-        "<leader>g",
+        "<leader>gg",
         function()
           require("neogit").open({ kind = "vsplit" })
         end,
